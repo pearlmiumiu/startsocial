@@ -5,7 +5,7 @@ from django.db import models
 
 
 from django.core.urlresolvers import reverse
-from django.conf import setting
+from django.conf import settings
 
 import misaka
 
@@ -20,7 +20,7 @@ class Post(models.Model):
 	created_at=models.DateTimeField(auto_now=True)
 	message=models.TextField()
 	message_html=models.TextField(editable=False)
-	group=models.ForeignKey(Group, related_name='post', null=True, blank=True)
+	group=models.ForeignKey(Group, related_name='posts', null=True, blank=True)
 
 	def __str__(self):
 		return self.message
@@ -28,11 +28,11 @@ class Post(models.Model):
 	def save(self, *args, **kwargs):
 		self.message_html=misaka.html(self.message)
 
-		super().save(*args, **kwargs)
+		super(Post, self).save(*args, **kwargs)
 
 	def get_absolute_url(self):
 
-		return reverse('posts:single', kwarg={'username': self.user.username, 'pk':self.pk})
+		return reverse('posts:single', kwargs={'username': self.user.username, 'pk':self.pk})
 
 	class Meta:
 		ordering= ['-created_at'] #decending order, the most recent post is on the top

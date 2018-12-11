@@ -10,6 +10,8 @@ from django.utils.text import slugify
 import misaka 
 from django.contrib.auth import get_user_model
 
+from django.core.urlresolvers import reverse
+
 User=get_user_model()
 
 
@@ -30,7 +32,7 @@ class Group(models.Model):
 	def save(self, *args, **kwargs):
 		self.slug= slugify(self.name)
 		self.description_html=misaka.html(self.description)
-		super().save(*args, **kwargs)
+		super(Group, self).save(*args, **kwargs)
 
 
 	def get_absolute_url(self):
